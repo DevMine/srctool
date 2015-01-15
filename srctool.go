@@ -11,10 +11,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/codegangsta/cli"
+
 	"github.com/DevMine/srctool/cmd"
 	"github.com/DevMine/srctool/log"
-
-	"github.com/codegangsta/cli"
 )
 
 func main() {
