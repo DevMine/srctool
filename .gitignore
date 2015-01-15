@@ -1,6 +1,7 @@
 # specific files
 tags
 srctool
+.directory
 
 # files by extension
 *.swp
