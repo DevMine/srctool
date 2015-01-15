@@ -1,0 +1,7 @@
+# specific files
+tags
+srctool
+
+# files by extension
+*.swp
+*.prename
