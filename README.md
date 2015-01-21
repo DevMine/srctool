@@ -2,8 +2,6 @@
 [![Build Status](https://travis-ci.org/DevMine/srctool.png?branch=master)](https://travis-ci.org/DevMine/srctool)
 [![GoDoc](http://godoc.org/github.com/DevMine/srctool?status.svg)](http://godoc.org/github.com/DevMine/srctool)
 [![GoWalker](http://img.shields.io/badge/doc-gowalker-blue.svg?style=flat)](https://gowalker.org/github.com/DevMine/srctool)
-[![Gobuild Download](http://gobuild.io/badge/github.com/DevMine/srctool/downloads.svg)](http://gobuild.io/github.com/DevMine/srctool)
-
 
 `srctool` is a command line tool to manage source code parsers. It is able to
 download parsers from a web server, install them and run them. In short, it is a
