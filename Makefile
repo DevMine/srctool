@@ -14,7 +14,7 @@ test:
 
 check:
 	go vet ${PKG}/...
-	golint ${GOPATH}/src/${PKG}
+	golint ${GOPATH}/src/${PKG}/...
 
 deps:
 	go get -u -v github.com/codegangsta/cli
