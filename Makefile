@@ -14,7 +14,7 @@ test:
 
 check:
 	go vet ${PKG}/...
-	golint ${GOPATH}/src/${PKG}/...
+	golint ${PKG}/...
 
 deps:
 	go get -u -v github.com/codegangsta/cli
@@ -23,6 +23,9 @@ deps:
 	go get -u -v github.com/mitchellh/ioprogress
 	go get -u -v golang.org/x/crypto/ssh/terminal
 	go get -u -v github.com/DevMine/repotool/model
+
+dev-deps:
+	go get -u github.com/golang/lint/golint
 
 cover:
 	go test -cover ${PKG}/...
