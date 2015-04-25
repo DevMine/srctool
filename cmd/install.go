@@ -21,20 +21,35 @@ func Install(c *cli.Context) {
 		log.Fatal(err)
 	}
 
+	installedParsers := make(map[string]struct{})
+	for _, parser := range getInstalledParsers() {
+		installedParsers[parser] = struct{}{}
+	}
+
 	if !c.Args().Present() {
-		installAll(cfg)
+		installAll(cfg, installedParsers)
 	} else {
-		if err := install(cfg, genParserName(c.Args().First()), true); err != nil {
-			log.Fatal(err)
+		parser := c.Args().First()
+		parserName := genParserName(parser)
+		if _, ok := installedParsers[parser]; !ok {
+			if err := install(cfg, parserName, true); err != nil {
+				log.Fatal(err)
+			}
+		} else {
+			log.Info(parserName, " already installed")
 		}
 	}
 }
 
-func installAll(cfg *config.Config) {
+func installAll(cfg *config.Config, installedParsers map[string]struct{}) {
 	parsers := getRemoteParsers(cfg.DownloadServerURL)
 	for _, parser := range parsers {
-		if err := install(cfg, genParserName(parser), true); err != nil {
-			log.Fail(err)
+		if _, ok := installedParsers[parser]; !ok {
+			if err := install(cfg, genParserName(parser), true); err != nil {
+				log.Fail(err)
+			}
+		} else {
+			log.Info(genParserName(parser), " already installed")
 		}
 	}
 }
