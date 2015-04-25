@@ -21,24 +21,24 @@ func List(c *cli.Context) {
 		log.Fatal(err)
 	}
 
+	var parsers []string
+	var parserStatus string
+
 	if c.Bool("r") {
-		remoteParsers := getRemoteParsers(cfg.DownloadServerURL)
+		parsers = getRemoteParsers(cfg.DownloadServerURL)
+		parserStatus = "available"
+	} else {
+		parsers = getInstalledParsers()
+		parserStatus = "installed"
+	}
 
-		fmt.Println("available parsers:")
-		for _, parser := range remoteParsers {
-			fmt.Println("  * ", parser)
-		}
+	if len(parsers) == 0 {
+		fmt.Println("no parser", parserStatus)
 		return
 	}
 
-	installedParsers := getInstalledParsers()
-	if len(installedParsers) == 0 {
-		fmt.Println("no parser installed")
-		return
-	}
-
-	fmt.Println("installed parsers:")
-	for _, parser := range installedParsers {
+	fmt.Println(parserStatus, "parsers:")
+	for _, parser := range parsers {
 		fmt.Println("  * ", parser)
 	}
 }
