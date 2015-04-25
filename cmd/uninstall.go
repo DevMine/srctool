@@ -19,7 +19,7 @@ func Uninstall(c *cli.Context) {
 	if !c.Args().Present() {
 		uninstallAll(c.Bool("dry"))
 	} else {
-		if err := uninstall(genParserName(c.Args().First()), c.Bool("dry")); err != nil {
+		if err := uninstall(genParserName(c.Args().First()), c.Bool("dry"), true); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -28,13 +28,13 @@ func Uninstall(c *cli.Context) {
 func uninstallAll(dryMode bool) {
 	parsers := getInstalledParsers()
 	for _, parser := range parsers {
-		if err := uninstall(genParserName(parser), dryMode); err != nil {
+		if err := uninstall(genParserName(parser), dryMode, true); err != nil {
 			log.Fail(err)
 		}
 	}
 }
 
-func uninstall(parserName string, dryMode bool) error {
+func uninstall(parserName string, dryMode bool, verbose bool) error {
 	parserPath := config.ParserPath(parserName)
 
 	if _, err := os.Stat(parserPath); os.IsNotExist(err) {
@@ -53,6 +53,8 @@ func uninstall(parserName string, dryMode bool) error {
 		return errors.New("failed to remove the parser")
 	}
 
-	log.Success("parser successfully removed")
+	if verbose {
+		log.Success("parser successfully removed")
+	}
 	return nil
 }

@@ -24,7 +24,7 @@ func Install(c *cli.Context) {
 	if !c.Args().Present() {
 		installAll(cfg)
 	} else {
-		if err := install(cfg, genParserName(c.Args().First())); err != nil {
+		if err := install(cfg, genParserName(c.Args().First()), true); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -33,14 +33,14 @@ func Install(c *cli.Context) {
 func installAll(cfg *config.Config) {
 	parsers := getRemoteParsers(cfg.DownloadServerURL)
 	for _, parser := range parsers {
-		if err := install(cfg, genParserName(parser)); err != nil {
+		if err := install(cfg, genParserName(parser), true); err != nil {
 			log.Fail(err)
 		}
 	}
 }
 
-func install(cfg *config.Config, parserName string) error {
-	if err := downloadParser(cfg.DownloadServerURL, parserName); err != nil {
+func install(cfg *config.Config, parserName string, verbose bool) error {
+	if err := downloadParser(cfg.DownloadServerURL, parserName, verbose); err != nil {
 		return err
 	}
 
@@ -59,6 +59,8 @@ func install(cfg *config.Config, parserName string) error {
 		return errors.New("failed to write MD5SUM file in the parser directory")
 	}
 
-	log.Success("parser successfully installed")
+	if verbose {
+		log.Success("parser successfully installed")
+	}
 	return nil
 }

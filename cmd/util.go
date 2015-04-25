@@ -95,7 +95,7 @@ func removeExt(fileName string) string {
 	return fileName[0 : len(fileName)-len(ext)]
 }
 
-func downloadParser(serverURL, parserName string) error {
+func downloadParser(serverURL, parserName string, verbose bool) error {
 	resp, err := http.Get(config.ParserURI(serverURL, parserName))
 	if err != nil {
 		log.Debug(err)
@@ -140,7 +140,9 @@ func downloadParser(serverURL, parserName string) error {
 	}
 
 	fmt.Println()
-	log.Success("parser successfully downloaded")
+	if verbose {
+		log.Success("parser successfully downloaded")
+	}
 
 	expectedSum, err := fetchChecksum(serverURL, parserName)
 	if err != nil {
@@ -153,7 +155,9 @@ func downloadParser(serverURL, parserName string) error {
 		return errors.New("MD5 sum mismatch")
 	}
 
-	log.Success("MD5 sum verified")
+	if verbose {
+		log.Success("MD5 sum verified")
+	}
 	return nil
 }
 

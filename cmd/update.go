@@ -59,12 +59,12 @@ func update(cfg *config.Config, parserName string) {
 		return
 	}
 
-	if err = uninstall(parserName, false); err != nil {
+	if err = uninstall(parserName, false, false); err != nil {
 		log.Fail(err)
 		return
 	}
 
-	if err = install(cfg, parserName); err != nil {
+	if err = install(cfg, parserName, false); err != nil {
 		log.Fail(err)
 		return
 	}
