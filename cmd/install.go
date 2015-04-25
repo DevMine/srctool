@@ -6,17 +6,12 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"io/ioutil"
 
 	"github.com/codegangsta/cli"
 
 	"github.com/DevMine/srctool/config"
 	"github.com/DevMine/srctool/log"
-)
-
-const (
-	parserNameFmt = "parser-%s" // parser name format
 )
 
 // Install command installs one or all language parser(s).
@@ -29,8 +24,7 @@ func Install(c *cli.Context) {
 	if !c.Args().Present() {
 		installAll(cfg)
 	} else {
-		parserName := fmt.Sprintf(parserNameFmt, c.Args().First())
-		if err := install(cfg, parserName); err != nil {
+		if err := install(cfg, genParserName(c.Args().First())); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -39,8 +33,7 @@ func Install(c *cli.Context) {
 func installAll(cfg *config.Config) {
 	parsers := getRemoteParsers(cfg.DownloadServerURL)
 	for _, parser := range parsers {
-		parserName := fmt.Sprintf(parserNameFmt, parser)
-		if err := install(cfg, parserName); err != nil {
+		if err := install(cfg, genParserName(parser)); err != nil {
 			log.Fail(err)
 		}
 	}

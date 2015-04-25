@@ -85,6 +85,10 @@ func formatParserName(fileName string) string {
 	return strings.Replace(removeExt(fileName), "parser-", "", -1)
 }
 
+func genParserName(lang string) string {
+	return fmt.Sprintf("parser-%s", lang)
+}
+
 // removeExt removes the extension of a given file name.
 func removeExt(fileName string) string {
 	ext := filepath.Ext(fileName)

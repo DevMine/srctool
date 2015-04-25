@@ -24,15 +24,14 @@ func Update(c *cli.Context) {
 	if !c.Args().Present() {
 		updateAll(cfg)
 	} else {
-		parserName := "parser-" + c.Args().First()
-		update(cfg, parserName)
+		update(cfg, genParserName(c.Args().First()))
 	}
 }
 
 func updateAll(cfg *config.Config) {
 	parsers := getInstalledParsers()
 	for _, parser := range parsers {
-		update(cfg, "parser-"+parser)
+		update(cfg, genParserName(parser))
 	}
 }
 

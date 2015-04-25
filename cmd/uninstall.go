@@ -19,8 +19,7 @@ func Uninstall(c *cli.Context) {
 	if !c.Args().Present() {
 		uninstallAll(c.Bool("dry"))
 	} else {
-		parserName := "parser-" + c.Args().First()
-		if err := uninstall(parserName, c.Bool("dry")); err != nil {
+		if err := uninstall(genParserName(c.Args().First()), c.Bool("dry")); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -29,8 +28,7 @@ func Uninstall(c *cli.Context) {
 func uninstallAll(dryMode bool) {
 	parsers := getInstalledParsers()
 	for _, parser := range parsers {
-		parserName := "parser-" + parser
-		if err := uninstall(parserName, dryMode); err != nil {
+		if err := uninstall(genParserName(parser), dryMode); err != nil {
 			log.Fail(err)
 		}
 	}
