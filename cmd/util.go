@@ -15,6 +15,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -24,6 +25,45 @@ import (
 	"github.com/DevMine/srctool/config"
 	"github.com/DevMine/srctool/log"
 )
+
+func getRemoteParsers(serverURL string) []string {
+	var remoteParsers []string
+
+	md5sums, err := fetchChecksumsFile(serverURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, line := range strings.Split(md5sums, "\n") {
+		tmp := strings.Split(line, " ")
+		if len(tmp) != 2 {
+			continue
+		}
+
+		path, parser := filepath.Split(tmp[1])
+		if isSupported(path) {
+			remoteParsers = append(remoteParsers, formatParserName(parser))
+		}
+	}
+
+	return remoteParsers
+}
+
+// isSupported checks whether the current OS and architecture are supported.
+func isSupported(path string) bool {
+	suppPath := filepath.Join(runtime.GOOS, runtime.GOARCH) + string(filepath.Separator)
+	return path == suppPath
+}
+
+func formatParserName(fileName string) string {
+	return strings.Replace(removeExt(fileName), "parser-", "", -1)
+}
+
+// removeExt removes the extension of a given file name.
+func removeExt(fileName string) string {
+	ext := filepath.Ext(fileName)
+	return fileName[0 : len(fileName)-len(ext)]
+}
 
 func downloadParser(serverURL, parserName string) error {
 	resp, err := http.Get(config.ParserURI(serverURL, parserName))
