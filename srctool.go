@@ -43,7 +43,7 @@ func main() {
 		{
 			Name:      "uninstall",
 			ShortName: "u",
-			Usage:     "uninstall a language parser",
+			Usage:     "uninstall one or all language parser(s)",
 			Flags: []cli.Flag{
 				cli.BoolFlag{
 					Name:  "dry",

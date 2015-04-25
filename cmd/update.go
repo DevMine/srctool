@@ -14,8 +14,7 @@ import (
 	"github.com/DevMine/srctool/log"
 )
 
-// Update command updates an installed parser.
-// It expects only one command line argument: the parser name.
+// Update command updates one or all installed parser(s).
 func Update(c *cli.Context) {
 	cfg, err := config.New()
 	if err != nil {
@@ -66,7 +65,7 @@ func update(cfg *config.Config, parserName string) {
 		return
 	}
 
-	if err = uninstallParser(parserName, false); err != nil {
+	if err = uninstall(parserName, false); err != nil {
 		log.Fail(err)
 		return
 	}
