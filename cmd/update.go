@@ -5,6 +5,7 @@
 package cmd
 
 import (
+	"io/ioutil"
 	"os"
 
 	"github.com/codegangsta/cli"
@@ -40,13 +41,13 @@ func Update(c *cli.Context) {
 		log.Fatal(err)
 	}
 
-	oldChecksum, err := checksum(config.LocalChecksumPath(parserName))
+	oldChecksum, err := ioutil.ReadFile(config.LocalChecksumPath(parserName))
 	if err != nil {
 		log.Debug(err)
 		log.Fatal("unable to read the MD5 file of the currently installed parser")
 	}
 
-	if newChecksum == oldChecksum {
+	if newChecksum == string(oldChecksum) {
 		log.Info("the latest version is already installed")
 		os.Exit(0)
 	}
