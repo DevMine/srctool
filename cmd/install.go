@@ -46,7 +46,7 @@ func install(cfg *config.Config, parserName string, verbose bool) error {
 
 	if err := uncompressParser(parserName, config.ParsersDir()); err != nil {
 		log.Debug(err)
-		return errors.New("failed to uncompress the parser")
+		return errors.New("failed to uncompress the " + parserName + " archive")
 	}
 
 	md5sum, err := checksum(config.TempPath(parserName))
@@ -60,7 +60,7 @@ func install(cfg *config.Config, parserName string, verbose bool) error {
 	}
 
 	if verbose {
-		log.Success("parser successfully installed")
+		log.Success(parserName, " successfully installed")
 	}
 	return nil
 }

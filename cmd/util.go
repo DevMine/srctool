@@ -99,7 +99,7 @@ func downloadParser(serverURL, parserName string, verbose bool) error {
 	resp, err := http.Get(config.ParserURI(serverURL, parserName))
 	if err != nil {
 		log.Debug(err)
-		return errors.New("failed to download parser")
+		return errors.New("failed to download " + parserName)
 	}
 	defer resp.Body.Close()
 
@@ -136,12 +136,12 @@ func downloadParser(serverURL, parserName string, verbose bool) error {
 
 	if _, err = io.Copy(out, progressR); err != nil {
 		log.Debug(err)
-		return errors.New("failed to download parser")
+		return errors.New("failed to download " + parserName)
 	}
 
 	fmt.Println()
 	if verbose {
-		log.Success("parser successfully downloaded")
+		log.Success(parserName, " successfully downloaded")
 	}
 
 	expectedSum, err := fetchChecksum(serverURL, parserName)
@@ -163,7 +163,7 @@ func downloadParser(serverURL, parserName string, verbose bool) error {
 
 func uncompressParser(parserName, target string) error {
 	if _, err := os.Stat(filepath.Join(target, parserName)); os.IsExist(err) {
-		return errors.New("parser already installed, if you want to update it, use the 'update' command")
+		return errors.New(parserName + " already installed, if you want to update it, use the 'update' command")
 	}
 
 	r, err := zip.OpenReader(config.TempPath(parserName))

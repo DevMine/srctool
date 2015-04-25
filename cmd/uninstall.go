@@ -39,7 +39,7 @@ func uninstall(parserName string, dryMode bool, verbose bool) error {
 
 	if _, err := os.Stat(parserPath); os.IsNotExist(err) {
 		log.Debug(err)
-		return errors.New("the parser is not installed")
+		return errors.New(parserName + " is not installed")
 	}
 
 	if dryMode {
@@ -50,11 +50,11 @@ func uninstall(parserName string, dryMode bool, verbose bool) error {
 	log.Debug("removing ", parserPath)
 	if err := os.RemoveAll(parserPath); err != nil {
 		log.Debug(err)
-		return errors.New("failed to remove the parser")
+		return errors.New("failed to remove " + parserName)
 	}
 
 	if verbose {
-		log.Success("parser successfully removed")
+		log.Success(parserName, " successfully removed")
 	}
 	return nil
 }
