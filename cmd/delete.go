@@ -14,27 +14,27 @@ import (
 	"github.com/DevMine/srctool/log"
 )
 
-// Uninstall command uninstalls one or all language parser(s).
-func Uninstall(c *cli.Context) {
+// Delete command deletes one or all language parser(s).
+func Delete(c *cli.Context) {
 	if !c.Args().Present() {
-		uninstallAll(c.Bool("dry"))
+		deleteAll(c.Bool("dry"))
 	} else {
-		if err := uninstall(genParserName(c.Args().First()), c.Bool("dry"), true); err != nil {
+		if err := deleteParser(genParserName(c.Args().First()), c.Bool("dry"), true); err != nil {
 			log.Fatal(err)
 		}
 	}
 }
 
-func uninstallAll(dryMode bool) {
+func deleteAll(dryMode bool) {
 	parsers := getInstalledParsers()
 	for _, parser := range parsers {
-		if err := uninstall(genParserName(parser), dryMode, true); err != nil {
+		if err := deleteParser(genParserName(parser), dryMode, true); err != nil {
 			log.Fail(err)
 		}
 	}
 }
 
-func uninstall(parserName string, dryMode bool, verbose bool) error {
+func deleteParser(parserName string, dryMode bool, verbose bool) error {
 	parserPath := config.ParserPath(parserName)
 
 	if _, err := os.Stat(parserPath); os.IsNotExist(err) {

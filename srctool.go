@@ -41,9 +41,9 @@ func main() {
 			},
 		},
 		{
-			Name:      "uninstall",
-			ShortName: "u",
-			Usage:     "uninstall one or all language parser(s)",
+			Name:      "delete",
+			ShortName: "d",
+			Usage:     "delete one or all language parser(s)",
 			Flags: []cli.Flag{
 				cli.BoolFlag{
 					Name:  "dry",
@@ -52,12 +52,12 @@ func main() {
 			},
 			Action: func(c *cli.Context) {
 				log.SetDebugMode(c.GlobalBool("d"))
-				cmd.Uninstall(c)
+				cmd.Delete(c)
 			},
 		},
 		{
 			Name:      "update",
-			ShortName: "up",
+			ShortName: "u",
 			Usage:     "update one or all language parser(s)",
 			Action: func(c *cli.Context) {
 				log.SetDebugMode(c.GlobalBool("d"))

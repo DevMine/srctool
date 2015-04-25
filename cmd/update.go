@@ -24,18 +24,18 @@ func Update(c *cli.Context) {
 	if !c.Args().Present() {
 		updateAll(cfg)
 	} else {
-		update(cfg, genParserName(c.Args().First()))
+		updateParser(cfg, genParserName(c.Args().First()))
 	}
 }
 
 func updateAll(cfg *config.Config) {
 	parsers := getInstalledParsers()
 	for _, parser := range parsers {
-		update(cfg, genParserName(parser))
+		updateParser(cfg, genParserName(parser))
 	}
 }
 
-func update(cfg *config.Config, parserName string) {
+func updateParser(cfg *config.Config, parserName string) {
 	if !isAlreadyInstalled(parserName) {
 		log.Fail(" parser " + parserName + " not installed, install it first")
 		return
@@ -59,12 +59,12 @@ func update(cfg *config.Config, parserName string) {
 		return
 	}
 
-	if err = uninstall(parserName, false, false); err != nil {
+	if err = deleteParser(parserName, false, false); err != nil {
 		log.Fail(err)
 		return
 	}
 
-	if err = install(cfg, parserName, false); err != nil {
+	if err = installParser(cfg, parserName, false); err != nil {
 		log.Fail(err)
 		return
 	}

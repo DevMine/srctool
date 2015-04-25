@@ -32,7 +32,7 @@ func Install(c *cli.Context) {
 		parser := c.Args().First()
 		parserName := genParserName(parser)
 		if _, ok := installedParsers[parser]; !ok {
-			if err := install(cfg, parserName, true); err != nil {
+			if err := installParser(cfg, parserName, true); err != nil {
 				log.Fatal(err)
 			}
 		} else {
@@ -45,7 +45,7 @@ func installAll(cfg *config.Config, installedParsers map[string]struct{}) {
 	parsers := getRemoteParsers(cfg.DownloadServerURL)
 	for _, parser := range parsers {
 		if _, ok := installedParsers[parser]; !ok {
-			if err := install(cfg, genParserName(parser), true); err != nil {
+			if err := installParser(cfg, genParserName(parser), true); err != nil {
 				log.Fail(err)
 			}
 		} else {
@@ -54,7 +54,7 @@ func installAll(cfg *config.Config, installedParsers map[string]struct{}) {
 	}
 }
 
-func install(cfg *config.Config, parserName string, verbose bool) error {
+func installParser(cfg *config.Config, parserName string, verbose bool) error {
 	if err := downloadParser(cfg.DownloadServerURL, parserName, verbose); err != nil {
 		return err
 	}
