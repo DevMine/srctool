@@ -59,11 +59,6 @@ func update(cfg *config.Config, parserName string) {
 		return
 	}
 
-	if err = downloadParser(cfg.DownloadServerURL, parserName); err != nil {
-		log.Fail(err)
-		return
-	}
-
 	if err = uninstall(parserName, false); err != nil {
 		log.Fail(err)
 		return
