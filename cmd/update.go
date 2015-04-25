@@ -33,7 +33,6 @@ func Update(c *cli.Context) {
 func updateAll(cfg *config.Config) {
 	parsers := getInstalledParsers()
 	for _, parser := range parsers {
-		log.Debug(parser)
 		update(cfg, "parser-"+parser)
 	}
 }
@@ -72,7 +71,7 @@ func update(cfg *config.Config, parserName string) {
 		return
 	}
 
-	if err = installParser(parserName); err != nil {
+	if err = install(cfg, parserName); err != nil {
 		log.Fail(err)
 		return
 	}

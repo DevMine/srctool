@@ -34,7 +34,7 @@ func main() {
 		{
 			Name:      "install",
 			ShortName: "i",
-			Usage:     "install a language parser",
+			Usage:     "install one or all language parser(s)",
 			Action: func(c *cli.Context) {
 				log.SetDebugMode(c.GlobalBool("d"))
 				cmd.Install(c)

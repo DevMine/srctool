@@ -19,30 +19,38 @@ const (
 	parserNameFmt = "parser-%s" // parser name format
 )
 
-// Install command installs a language parser.
-// It expects only one command line argument: the parser name.
+// Install command installs one or all language parser(s).
 func Install(c *cli.Context) {
-	if !c.Args().Present() {
-		log.Fatal("expected 1 argument, found 0")
-	}
-
 	cfg, err := config.New()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	parserName := fmt.Sprintf(parserNameFmt, c.Args().First())
-
-	if err := downloadParser(cfg.DownloadServerURL, parserName); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := installParser(parserName); err != nil {
-		log.Fatal(err)
+	if !c.Args().Present() {
+		installAll(cfg)
+	} else {
+		parserName := fmt.Sprintf(parserNameFmt, c.Args().First())
+		if err := install(cfg, parserName); err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 
-func installParser(parserName string) error {
+func installAll(cfg *config.Config) {
+	parsers := getRemoteParsers(cfg.DownloadServerURL)
+	for _, parser := range parsers {
+		parserName := fmt.Sprintf(parserNameFmt, parser)
+		if err := install(cfg, parserName); err != nil {
+			log.Fail(err)
+		}
+	}
+}
+
+func install(cfg *config.Config, parserName string) error {
+	if err := downloadParser(cfg.DownloadServerURL, parserName); err != nil {
+		return err
+	}
+
 	if err := uncompressParser(parserName, config.ParsersDir()); err != nil {
 		log.Debug(err)
 		return errors.New("failed to uncompress the parser")
