@@ -29,27 +29,27 @@ func Update(c *cli.Context) {
 	parserName := "parser-" + c.Args().First()
 
 	if !isAlreadyInstalled(parserName) {
-		log.Fatal(" parser is not installed, use the install first")
+		log.Fatal(" parser not installed, install it first")
 	}
 
-	if err = downloadParser(cfg.DownloadServerURL, parserName); err != nil {
-		log.Fatal(err)
-	}
-
-	newChecksum, err := checksum(config.TempPath(parserName))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	oldChecksum, err := ioutil.ReadFile(config.LocalChecksumPath(parserName))
+	LocalChecksum, err := ioutil.ReadFile(config.LocalChecksumPath(parserName))
 	if err != nil {
 		log.Debug(err)
 		log.Fatal("unable to read the MD5 file of the currently installed parser")
 	}
 
-	if newChecksum == string(oldChecksum) {
-		log.Info("the latest version is already installed")
+	remoteCheckSum, err := fetchChecksum(cfg.DownloadServerURL, parserName)
+	if err != nil {
+		log.Fail(err)
+	}
+
+	if string(LocalChecksum) == remoteCheckSum {
+		log.Info("latest version already installed")
 		os.Exit(0)
+	}
+
+	if err = downloadParser(cfg.DownloadServerURL, parserName); err != nil {
+		log.Fatal(err)
 	}
 
 	if err = uninstallParser(parserName, false); err != nil {
@@ -60,7 +60,7 @@ func Update(c *cli.Context) {
 		log.Fatal(err)
 	}
 
-	log.Success("the parser has been successfully updated")
+	log.Success("parser successfully updated")
 }
 
 func isAlreadyInstalled(parserName string) bool {
