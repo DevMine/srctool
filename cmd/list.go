@@ -6,8 +6,6 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
-	"path/filepath"
 
 	"github.com/codegangsta/cli"
 
@@ -33,33 +31,14 @@ func List(c *cli.Context) {
 		return
 	}
 
-	listInstalledParsers()
-}
-
-func listInstalledParsers() {
-	fis, err := ioutil.ReadDir(filepath.Join(config.DataDir(), config.ParsersFolder))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if len(fis) == 0 {
+	installedParsers := getInstalledParsers()
+	if len(installedParsers) == 0 {
 		fmt.Println("no parser installed")
 		return
 	}
 
-	fmt.Println("available parsers:")
-	for _, fi := range fis {
-		if !fi.IsDir() {
-			continue
-		}
-
-		if marched, err := filepath.Match("parser-*", fi.Name()); err != nil {
-			log.Debug(err)
-			continue
-		} else if !marched {
-			continue
-		}
-
-		fmt.Println("  * ", formatParserName(fi.Name()))
+	fmt.Println("installed parsers:")
+	for _, parser := range installedParsers {
+		fmt.Println("  * ", parser)
 	}
 }

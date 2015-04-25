@@ -49,6 +49,32 @@ func getRemoteParsers(serverURL string) []string {
 	return remoteParsers
 }
 
+func getInstalledParsers() []string {
+	var installedParsers []string
+
+	fis, err := ioutil.ReadDir(filepath.Join(config.DataDir(), config.ParsersFolder))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, fi := range fis {
+		if !fi.IsDir() {
+			continue
+		}
+
+		if marched, err := filepath.Match("parser-*", fi.Name()); err != nil {
+			log.Debug(err)
+			continue
+		} else if !marched {
+			continue
+		}
+
+		installedParsers = append(installedParsers, formatParserName(fi.Name()))
+	}
+
+	return installedParsers
+}
+
 // isSupported checks whether the current OS and architecture are supported.
 func isSupported(path string) bool {
 	suppPath := filepath.Join(runtime.GOOS, runtime.GOARCH) + string(filepath.Separator)
