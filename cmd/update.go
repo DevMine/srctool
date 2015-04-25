@@ -17,50 +17,67 @@ import (
 // Update command updates an installed parser.
 // It expects only one command line argument: the parser name.
 func Update(c *cli.Context) {
-	if !c.Args().Present() {
-		log.Fatal("expected 1 argument, found 0")
-	}
-
 	cfg, err := config.New()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	parserName := "parser-" + c.Args().First()
+	if !c.Args().Present() {
+		updateAll(cfg)
+	} else {
+		parserName := "parser-" + c.Args().First()
+		update(cfg, parserName)
+	}
+}
 
+func updateAll(cfg *config.Config) {
+	parsers := getInstalledParsers()
+	for _, parser := range parsers {
+		log.Debug(parser)
+		update(cfg, "parser-"+parser)
+	}
+}
+
+func update(cfg *config.Config, parserName string) {
 	if !isAlreadyInstalled(parserName) {
-		log.Fatal(" parser not installed, install it first")
+		log.Fail(" parser " + parserName + " not installed, install it first")
+		return
 	}
 
 	LocalChecksum, err := ioutil.ReadFile(config.LocalChecksumPath(parserName))
 	if err != nil {
 		log.Debug(err)
-		log.Fatal("unable to read the MD5 file of the currently installed parser")
+		log.Fail("unable to read the MD5 file of the currently installed " + parserName + " parser")
+		return
 	}
 
 	remoteCheckSum, err := fetchChecksum(cfg.DownloadServerURL, parserName)
 	if err != nil {
 		log.Fail(err)
+		return
 	}
 
 	if string(LocalChecksum) == remoteCheckSum {
-		log.Info("latest version already installed")
-		os.Exit(0)
+		log.Info("latest version of " + parserName + " already installed")
+		return
 	}
 
 	if err = downloadParser(cfg.DownloadServerURL, parserName); err != nil {
-		log.Fatal(err)
+		log.Fail(err)
+		return
 	}
 
 	if err = uninstallParser(parserName, false); err != nil {
-		log.Fatal(err)
+		log.Fail(err)
+		return
 	}
 
 	if err = installParser(parserName); err != nil {
-		log.Fatal(err)
+		log.Fail(err)
+		return
 	}
 
-	log.Success("parser successfully updated")
+	log.Success("parser " + parserName + " successfully updated")
 }
 
 func isAlreadyInstalled(parserName string) bool {

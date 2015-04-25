@@ -58,7 +58,7 @@ func main() {
 		{
 			Name:      "update",
 			ShortName: "up",
-			Usage:     "update a language parser",
+			Usage:     "update one or all language parser(s)",
 			Action: func(c *cli.Context) {
 				log.SetDebugMode(c.GlobalBool("d"))
 				cmd.Update(c)
