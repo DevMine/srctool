@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -100,13 +99,9 @@ func cmdRoutine(parsersPath, parserName, projectPath string, c chan []byte) {
 	outBuf := new(bytes.Buffer)
 	errBuf := new(bytes.Buffer)
 
-	if err := os.Chdir(filepath.Join(parsersPath, parserName)); err != nil {
-		log.Fatal(err)
-	}
+	parserBin := filepath.Join(parsersPath, parserName, "parser")
 
-	execPath := "./parser"
-
-	cmd := exec.Command(execPath, projectPath)
+	cmd := exec.Command(parserBin, projectPath)
 	cmd.Stdout = outBuf
 	cmd.Stderr = errBuf
 
