@@ -67,11 +67,11 @@ func main() {
 		{
 			Name:      "list",
 			ShortName: "l",
-			Usage:     "list all installed parsers",
+			Usage:     "list installed or available parsers",
 			Flags: []cli.Flag{
 				cli.BoolFlag{
 					Name:  "r",
-					Usage: "list remote available parsers",
+					Usage: "list remote parsers",
 				},
 			},
 			Action: func(c *cli.Context) {
