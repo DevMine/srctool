@@ -18,11 +18,11 @@ check:
 
 deps:
 	go get -u -v github.com/codegangsta/cli
-	go get -u -v github.com/DevMine/srcanlzr
+	go get -u -v -f github.com/DevMine/srcanlzr
 	go get -u -v github.com/gilliek/go-xterm256/xterm256
 	go get -u -v github.com/mitchellh/ioprogress
 	go get -u -v golang.org/x/crypto/ssh/terminal
-	go get -u -v github.com/DevMine/repotool/model
+	go get -u -v -f github.com/DevMine/repotool/model
 
 dev-deps:
 	go get -u github.com/golang/lint/golint
