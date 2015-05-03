@@ -207,6 +207,10 @@ func uncompressParser(parserName, target string) error {
 	return nil
 }
 
+func deleteParserTarball(parserName string) error {
+	return os.Remove(config.TempPath(parserName))
+}
+
 func fetchChecksumsFile(serverURL string) (string, error) {
 	resp, err := http.Get(config.RemoteChecksumsPath(serverURL))
 	if err != nil {

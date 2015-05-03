@@ -59,6 +59,12 @@ func installParser(cfg *config.Config, parserName string, verbose bool) error {
 		return err
 	}
 
+	defer func() {
+		if err := deleteParserTarball(parserName); err != nil {
+			log.Fail(err)
+		}
+	}()
+
 	if err := uncompressParser(parserName, config.ParsersDir()); err != nil {
 		log.Debug(err)
 		return errors.New("failed to uncompress the " + parserName + " archive")
