@@ -1,5 +1,7 @@
 PKG  = github.com/DevMine/srctool
 EXEC = srctool
+VERSION = 1.0.0
+DIR = ${EXEC}-${VERSION}
 
 all: check test build
 
@@ -15,6 +17,13 @@ test:
 check:
 	go vet ${PKG}/...
 	golint ${PKG}/...
+
+package: deps build
+	test -d ${DIR} || mkdir ${DIR}
+	cp ${EXEC} ${DIR}/
+	cp README.md ${DIR}/
+	tar czvf ${DIR}.tar.gz ${DIR}
+	rm -rf ${DIR}	
 
 deps:
 	go get -u -v github.com/codegangsta/cli
