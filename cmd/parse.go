@@ -42,7 +42,7 @@ func Parse(ctx *cli.Context) {
 	}
 
 	totalWaits := 0
-	c := make(chan []byte)
+	c := make(chan *bytes.Buffer)
 
 	for _, fi := range fis {
 		if !fi.IsDir() {
@@ -64,8 +64,8 @@ func Parse(ctx *cli.Context) {
 
 	for ; totalWaits > 0; totalWaits-- {
 		select {
-		case bs := <-c:
-			prj, err := src.Unmarshal(bs)
+		case buf := <-c:
+			prj, err := src.Decode(buf)
 			if err != nil {
 				log.Fail(err)
 			}
@@ -95,7 +95,7 @@ func Parse(ctx *cli.Context) {
 }
 
 // cmdRoutine runs a language parser on a project.
-func cmdRoutine(parsersPath, parserName, projectPath string, c chan []byte) {
+func cmdRoutine(parsersPath, parserName, projectPath string, c chan *bytes.Buffer) {
 	outBuf := new(bytes.Buffer)
 	errBuf := new(bytes.Buffer)
 
@@ -121,5 +121,5 @@ func cmdRoutine(parsersPath, parserName, projectPath string, c chan []byte) {
 		log.Fatal(fmt.Sprintf("the %s parser did not produce any output", parserName))
 	}
 
-	c <- outBuf.Bytes()
+	c <- outBuf
 }
