@@ -21,8 +21,9 @@ import (
 )
 
 func main() {
+	extflag := flag.String("x", ".zip", "file extension to restrict to")
 	flag.Usage = func() {
-		fmt.Printf("usage: %s [(PARSERS DIRECTORY)]\n",
+		fmt.Printf("usage: %s [(DIRECTORY)]\n",
 			filepath.Base(os.Args[0]))
 		flag.PrintDefaults()
 		os.Exit(0)
@@ -39,12 +40,12 @@ func main() {
 		flag.Usage()
 	}
 
-	if err := genMD5Sums(path); err != nil {
+	if err := genMD5Sums(path, *extflag); err != nil {
 		log.Fatal(err)
 	}
 }
 
-func genMD5Sums(dirPath string) error {
+func genMD5Sums(dirPath, extension string) error {
 	return filepath.Walk(dirPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return nil
@@ -55,7 +56,7 @@ func genMD5Sums(dirPath string) error {
 		}
 
 		// all parsers are zip archives
-		if filepath.Ext(info.Name()) != ".zip" {
+		if filepath.Ext(info.Name()) != extension {
 			return nil
 		}
 
